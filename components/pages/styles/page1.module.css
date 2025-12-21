@@ -1,0 +1,132 @@
+.container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.objectCover {
+  object-fit: cover;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12vh;
+  padding-bottom: 5vh;
+}
+
+.titleCard {
+  position: relative;
+  width: 328px;
+  background-color: rgba(229, 214, 165, 0.8);
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0 30px;
+}
+
+.titleHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.titleEn,
+.titleCn {
+  font-family: var(--font-abhaya-libre), serif;
+  font-weight: 800;
+  font-size: 45px;
+  line-height: 1.18;
+  color: #000000;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin: 0;
+}
+
+.schoolList {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.schoolBadge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 108px;
+  height: 40px;
+  border-radius: 28px;
+  box-shadow: inset 0px 0px 12px 0px rgba(73, 83, 64, 0.25);
+  font-family: var(--font-abhaya-libre), serif;
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 1;
+  color: #FFFFFF;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  opacity: 0.9;
+}
+
+.cuhk { background-color: #5E7E43; }
+.hku { background-color: #6BAC4F; }
+.hkust { background-color: #A1C40C; }
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 40px;
+}
+
+.startBtn {
+  width: 262px;
+  height: 80px;
+  background-color: #A4C18B;
+  border-radius: 28px;
+  border: none;
+  opacity: 0.9;
+  box-shadow: inset 0px 0px 12px 0px rgba(73, 83, 64, 0.25);
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.startBtnText {
+  font-family: var(--font-abhaya-libre), serif;
+  font-weight: 800;
+  font-size: 45px;
+  line-height: 1.18;
+  color: #FFFFFF;
+  -webkit-text-stroke: 1px #A2BDFF;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.startBtn:active {
+  transform: scale(0.95);
+}
+
+.privacy {
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0;
+  margin-bottom: 20px;
+}

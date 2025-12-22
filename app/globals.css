@@ -2,7 +2,7 @@
   --background: #ffffff;
   --foreground: #171717;
   /* Responsive container vars for mobile-first layout */
-  --height: clamp(650px, 100svh, 950px);
+  --height: max(650px, 100svh);
   --content-width: clamp(375px, 100vw, 450px);
   --width: var(--content-width);
   --transition: all 0.3s ease-in-out;

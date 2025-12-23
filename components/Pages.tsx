@@ -26,7 +26,8 @@ import Page23 from "@/components/pages/page23";
 import Page24 from "@/components/pages/page24";
 
 export default function Pages() {
-  const { isActive } = usePageManager();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { currentPage } = usePageManager() as any; 
   const PAGES = [
     Page1, Page2, Page3, Page4, Page5, Page6, Page7, Page8,
     Page9, Page10, Page11, Page12, Page13, Page14, Page15, Page16,
@@ -35,7 +36,11 @@ export default function Pages() {
 
   return (
     <>
-      {PAGES.map((Comp, idx) => (isActive(idx + 1) ? <Comp key={idx} /> : null))}
+      {PAGES.map((Comp, idx) => (
+        <div key={idx} className={`page ${idx + 1 === currentPage ? "active" : ""}`}>
+           <Comp />
+        </div>
+      ))}
     </>
   );
 }

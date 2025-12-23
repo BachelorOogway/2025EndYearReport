@@ -1,0 +1,211 @@
+.container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background-image: linear-gradient(180deg, #FFEBB1 0%, #FFF7E4 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Cloud 1 - Top Left */
+.cloud1 {
+  position: absolute;
+  top: 3rem; /* 48px */
+  left: -1.25rem; /* Based on image cropping usually */
+  width: 19.375rem; /* 310px */
+  height: 3.4375rem; /* 55px */
+  z-index: 1;
+}
+
+/* Text Group 1 */
+.textGroup1 {
+  margin-top: 6.5rem; /* Adjust based on flow */
+  padding-left: 3.06rem; /* 49px */
+  padding-right: 2.375rem;
+  width: 100%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6875rem;
+  align-items: flex-start; /* Ensure left alignment */
+}
+
+.greetingRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.fontPrimary {
+  font-family: var(--ff-primary);
+  font-weight: 700;
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.2;
+  color: #000000;
+  white-space: nowrap; /* Prevent wrapping */
+}
+
+/* Text Group 2 */
+.textGroup2 {
+  margin-top: 2.75rem; /* 44px */
+  padding-left: 3.125rem; /* 50px */
+  width: 100%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Ensure left alignment */
+}
+
+/* Main Visual Area */
+.visualArea {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 65%; /* Increased height to accommodate elements */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Cloud 2 - Right */
+.cloud2 {
+  position: absolute;
+  right: -1rem;
+  top: 0;
+  width: 11.6875rem; /* 187px */
+  height: 4.125rem; /* 66px */
+  z-index: 1;
+}
+
+/* Sun Background */
+.sun {
+  position: relative; /* Changed from absolute to relative for stacking flow */
+  width: 17.3125rem; /* 277px */
+  height: 17.3125rem;
+  background-image: linear-gradient(180deg, #FFF681 0%, rgba(255, 191, 132, 0.43) 100%);
+  border-radius: 50%;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  /* Remove padding-bottom to let tree sit lower */
+  margin-bottom: 2rem; /* Push up from bottom slightly before overlap */
+}
+
+/* Tree Wrapper */
+.treeWrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+  /* Adjust tree image within sun */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 3rem; /* Lift tree slightly inside sun */
+  cursor: pointer;
+}
+
+/* Common styles for trees to ensure alignment */
+.smallTree,
+.bigTree {
+  position: absolute;
+  transform-origin: bottom center;
+  will-change: transform, opacity;
+}
+
+/* Small Tree State */
+.smallTree {
+  /* Using same dimensions/positioning logic as original */
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  transform: scale(0.85) translateY(15%);
+  transition: transform 0.4s ease-in, opacity 0.3s ease-in;
+  z-index: 2;
+}
+
+.smallTreeHidden {
+  transform: scale(0) translateY(15%);
+  opacity: 0;
+}
+
+/* Big Tree State */
+.bigTree {
+  width: 140%; /* Make it bigger than the sun/container */
+  height: 140%;
+  object-fit: contain;
+  object-position: bottom center;
+  /* Start small and hidden. Use calc to move up by 1.5rem relative to original 10% */
+  transform: scale(0.2) translateY(calc(10% - 2rem));
+  opacity: 0;
+  z-index: 3;
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease-out;
+}
+
+.bigTreeActive {
+  /* Active state also needs the offset */
+  transform: scale(1.1) translateY(calc(10% - 2rem)); /* Slight overshoot scale */
+  opacity: 1;
+}
+
+/* Helper to hide hints */
+.fadeOut {
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+  pointer-events: none;
+}
+
+/* Arrow */
+.arrow {
+  position: absolute;
+  left: 28%; /* Adjusted from Figma (107/375) */
+  bottom: 28%; /* Adjusted visually */
+  width: 2.85rem; /* ~45px, scaled down from 57px */
+  height: 2.65rem; /* ~42px, scaled down from 53px */
+  animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); /* Reduced float range */ }
+}
+
+.clickHint {
+  position: absolute;
+  left: 10%; /* Moved further left to avoid overlap with arrow */
+  bottom: 30%; /* Align with arrow */
+  font-family: var(--ff-primary);
+  font-size: 0.8125rem; /* 13px, scaled down from 15px */
+  color: #000000;
+  white-space: nowrap;
+}
+
+/* Cloud 3 - Adjusted Position */
+.cloud3 {
+  position: absolute;
+  left: -8rem; /* Further left */
+  top: 20%; /* Relative to visual area or sun */
+  width: 24.4375rem; /* 391px */
+  height: 4.125rem; /* 66px */
+  z-index: 3;
+}
+
+/* Field / Soil */
+.field {
+  position: relative;
+  width: 100%;
+  height: 10rem; /* Approx */
+  z-index: 4;
+  margin-top: -6.125rem; /* -98px overlap */
+  margin-bottom: -1px;
+}
+
+.footerText {
+  display: none; /* Remove footer text */
+}

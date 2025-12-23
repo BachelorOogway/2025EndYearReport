@@ -21,6 +21,7 @@ export const PageManagerContext = createContext<PageManagerContextType | null>(n
 
 export default function PageManagerProvider({ children }: { children: React.ReactNode }) {
   const [showUpTo, setShowUpTo] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const pagesRef = useRef<Map<number, PageEntry>>(new Map());
   const rootMargin = "-50% 0px -50% 0px";
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -58,12 +59,12 @@ export default function PageManagerProvider({ children }: { children: React.Reac
       });
     }
     if (scrollTo) {
-      setTimeout(() => {
-        const nextPage = document.getElementById(`page${by + 1}`);
-        nextPage?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
+      // 触发转场
+      if (by + 1 > currentPage) {
+        setCurrentPage(by + 1);
+      }
     }
-  }, []);
+  }, [currentPage]);
 
   const isActive = useCallback((page: number) => page <= showUpTo, [showUpTo]);
 
@@ -125,59 +126,96 @@ export default function PageManagerProvider({ children }: { children: React.Reac
     };
   }, []);
 
-  // 容器滚动/触摸推进（不暴露新 API，内部调用 appendNextPage(showUpTo, true)）
+  // 容器滚动/触摸推进
   useEffect(() => {
     if (typeof window === "undefined") return;
     const container = document.getElementById("pages-wrapper");
     if (!container) return;
-    thresholdPxRef.current = Math.max(100, Math.floor(window.innerHeight * 0.25));
+    // 极小阈值，只要有滑动意图就触发
+    thresholdPxRef.current = 15;
 
-    const tryAdvance = () => {
+    const attemptNavigation = (direction: 'next' | 'prev') => {
       const now = Date.now();
       if (now < cooldownUntilRef.current) return;
-      appendNextPage(showUpTo, true);
-      cooldownUntilRef.current = now + 400; // 冷却期
+      
+      if (direction === 'next') {
+        if (currentPage < showUpTo) {
+          setCurrentPage(prev => prev + 1);
+        } else {
+          // 如果当前是最后一页，尝试解锁下一页并跳转
+          appendNextPage(showUpTo, true);
+        }
+      } else {
+        if (currentPage > 1) {
+          setCurrentPage(prev => prev - 1);
+        }
+      }
+      
+      cooldownUntilRef.current = now + 600;
       scrollAccumRef.current = 0;
       touchStartYRef.current = null;
     };
 
     const onWheel = (e: WheelEvent) => {
+      // 阻止默认滚动行为（尽管 overflow: hidden 已经阻止了，双重保险）
+      e.preventDefault();
+      
       const now = Date.now();
       if (now < cooldownUntilRef.current) return;
-      scrollAccumRef.current += Math.abs(e.deltaY);
-      if (scrollAccumRef.current >= thresholdPxRef.current) {
-        tryAdvance();
+      scrollAccumRef.current += e.deltaY;
+      
+      if (Math.abs(scrollAccumRef.current) >= thresholdPxRef.current) {
+        if (scrollAccumRef.current > 0) {
+          attemptNavigation('next');
+        } else {
+          attemptNavigation('prev');
+        }
       }
     };
 
     const onTouchStart = (e: TouchEvent) => {
       touchStartYRef.current = e.touches[0]?.clientY ?? null;
     };
+    
+    // 核心：在 touchmove 中阻止默认行为，解决下拉刷新/回弹冲突
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+    };
+    
     const onTouchEnd = (e: TouchEvent) => {
       const now = Date.now();
       if (now < cooldownUntilRef.current) return;
       const endY = e.changedTouches[0]?.clientY ?? null;
       if (touchStartYRef.current == null || endY == null) return;
-      const delta = Math.abs(endY - touchStartYRef.current);
-      if (delta >= thresholdPxRef.current) {
-        tryAdvance();
+      
+      const delta = touchStartYRef.current - endY; // Positive = Finger Up (Scroll Down) = Next
+      if (Math.abs(delta) >= thresholdPxRef.current) {
+        if (delta > 0) {
+          attemptNavigation('next');
+        } else {
+          attemptNavigation('prev');
+        }
       }
       touchStartYRef.current = null;
     };
 
-    container.addEventListener("wheel", onWheel, { passive: true });
+    // passive: false 是调用 preventDefault 的关键
+    container.addEventListener("wheel", onWheel, { passive: false });
     container.addEventListener("touchstart", onTouchStart, { passive: true });
+    container.addEventListener("touchmove", onTouchMove, { passive: false });
     container.addEventListener("touchend", onTouchEnd, { passive: true });
 
     return () => {
       container.removeEventListener("wheel", onWheel);
       container.removeEventListener("touchstart", onTouchStart);
+      container.removeEventListener("touchmove", onTouchMove);
       container.removeEventListener("touchend", onTouchEnd);
     };
-    // 依赖 showUpTo，确保推进依据当前边界页
-  }, [showUpTo, appendNextPage]);
+  }, [showUpTo, currentPage, appendNextPage]);
 
-  const value = useMemo<PageManagerContextType>(() => ({
+  const value = useMemo<PageManagerContextType & { currentPage: number }>(() => ({
     showUpTo,
     registerPageRef,
     onEnterViewportForFirstTime,
@@ -185,7 +223,8 @@ export default function PageManagerProvider({ children }: { children: React.Reac
     isActive,
     onAppendNext,
     offAppendNext,
-  }), [showUpTo, registerPageRef, onEnterViewportForFirstTime, appendNextPage, isActive, onAppendNext, offAppendNext]);
+    currentPage,
+  }), [showUpTo, registerPageRef, onEnterViewportForFirstTime, appendNextPage, isActive, onAppendNext, offAppendNext, currentPage]);
 
   return <PageManagerContext.Provider value={value}>{children}</PageManagerContext.Provider>;
 }

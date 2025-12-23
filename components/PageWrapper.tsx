@@ -80,10 +80,11 @@ export default function PageWrapper({
 
   return (
     <div
-      className={`page page${pageNumber}${className ? ` ${className}` : ""}`}
+      className={`page-content${className ? ` ${className}` : ""}`} // 移除了 .page 类名，因为外层已包裹
       id={`page${pageNumber}`}
       ref={ref}
       onClickCapture={handleClickCapture}
+      style={{ width: '100%', height: '100%' }}
     >
       {children}
     </div>

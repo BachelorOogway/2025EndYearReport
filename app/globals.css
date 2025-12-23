@@ -6,6 +6,9 @@
   --content-width: clamp(375px, 100vw, 450px);
   --width: var(--content-width);
   --transition: all 0.3s ease-in-out;
+  
+  /* Responsive Base: 375px design width => 1rem = 16px */
+  --design-width: 375;
 
   /* Colors & text from 2024 report */
   --clr-offwhite: hsla(33, 43%, 96%, 1);
@@ -27,12 +30,12 @@
     Cantarell, Fira Sans, Droid Sans, Helvetica Neue, PingFang SC,
     Hiragino Sans GB, Microsoft YaHei;
 
-  /* Font sizes */
-  --fs-primary: 1.25rem;
-  --fs-accent: 1.5rem;
-  --fs-figure: 2.25rem;
-  --fs-large: 3rem;
-  --fs-extra-large: 8.125rem;
+  /* Font sizes (based on 1rem = 16px @ 375px) */
+  --fs-primary: 1.25rem;       /* 20px */
+  --fs-accent: 1.5rem;         /* 24px */
+  --fs-figure: 2.25rem;        /* 36px */
+  --fs-large: 3rem;            /* 48px */
+  --fs-extra-large: 8.125rem;  /* 130px */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -46,6 +49,16 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+}
+
+/* Fluid Typography Root */
+html {
+  /* 
+    Base: 16px at 375px viewport width
+    Slope: 16 / 375 * 100 = 4.266... vw
+    Range: 14px (min) -> 20px (max)
+  */
+  font-size: clamp(14px, 4.26vw, 20px);
 }
 
 body {
@@ -88,16 +101,8 @@ a {
   font-style: normal;
 }
 
-@media (min-height: 790px) and (min-width: 390px) {
-  :root {
-    --fs-primary: 24px;
-    --fs-accent: 28px;
-    --fs-figure: 44px;
-    --fs-large: 56px;
-    --fs-extra-large: 140px;
-  }
-  html { font-size: 20px; }
-}
+/* 移除旧的媒体查询覆盖，统一使用流体字号 */
+/* @media (min-height: 790px) and (min-width: 390px) { ... } */
 
 /* Hide scrollbars globally (mobile-first, opt-in classes below use scrolling) */
 *::-webkit-scrollbar { display: none; }
@@ -125,21 +130,32 @@ a {
 /* Scroll snapping container for paged sections */
 .pages-wrapper {
   height: var(--height);
-  scroll-snap-type: y mandatory;
-  overflow-y: auto;
-  overflow-x: clip;
+  width: 100%; /* Restore width to 100% to respect parent container width */
+  overflow: hidden; /* Disable native scroll */
   position: relative;
-  -webkit-overflow-scrolling: touch;
 }
 
 /* Individual full-viewport page sections */
 .page {
   height: var(--height);
   width: 100%;
-  scroll-snap-align: start;
-  position: relative;
-  touch-action: manipulation;
-  overflow: clip;
+  position: absolute; /* Changed from relative to absolute for stacking */
+  inset: 0;
+  overflow: hidden; /* Changed from clip */
+  
+  /* Default state: hidden and scaled */
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.page.active {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+  z-index: 10;
 }
 
 .hide { opacity: 0; transform: translateY(0.5rem); }
@@ -185,26 +201,7 @@ a {
 
 /* Page 1 specific styles removed and moved to module */
 
-/* Page 3 specific styles (ported from Vue) */
-.page3 { padding-top: 5%; background-color: var(--clr-green); }
-.img-wrapper { width: 80%; margin-block: -18% -20%; scale: 1.3; position: relative; }
-.decor { top: 0; left: 0; }
-.bottle { animation: bottle 4s infinite, wave 5s infinite linear; }
-.wave { animation: wave 5s infinite linear; }
-@keyframes bottle { 0% { transform: translateX(3px) rotate(-3deg);} 50% { transform: translateX(-3px) rotate(3deg);} 100% { transform: translateX(3px) rotate(-3deg);} }
-@keyframes wave { 0% { translate: 0 -5px;} 50% { translate: 0 5px;} 100% { translate: 0 -5px;} }
-.bird { top: 10%; animation: bird 7s infinite; }
-@keyframes bird {
-  0% { transform: translate(5rem, 0); }
-  25% { transform: translate(2rem, 2rem); }
-  50% { transform: translate(-10rem, -1rem); }
-  51% { transform: translate(-10rem, -0.5rem) rotateY(180deg); }
-  75% { transform: translate(-3rem, 2rem) rotateY(180deg); }
-  100% { transform: translate(5rem, 0); }
-}
-.pt2 { text-align: center; }
-.text { font-size: 2rem; }
-.highlight { color: var(--clr-oragne); }
+
 
 /* Scroll up hint (ported from 2024) */
 .hint-wrapper {

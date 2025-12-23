@@ -30,55 +30,55 @@
 
 .titleCard {
   position: relative;
-  width: 328px;
+  width: 20.5rem; /* 328px */
   background-color: rgba(229, 214, 165, 0.8);
-  border-radius: 30px;
+  border-radius: 1.875rem; /* 30px */
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 0 30px;
+  padding: 1.25rem 0 1.875rem; /* 20px 0 30px */
 }
 
 .titleHeader {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem; /* 20px */
 }
 
 .titleEn,
 .titleCn {
   font-family: var(--font-abhaya-libre), serif;
   font-weight: 800;
-  font-size: 45px;
+  font-size: 2.8125rem; /* 45px */
   line-height: 1.18;
   color: #000000;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  text-shadow: 0px 0.25rem 0.25rem rgba(0, 0, 0, 0.25); /* 4px */
   margin: 0;
 }
 
 .schoolList {
   display: flex;
   justify-content: center;
-  gap: 12px;
+  gap: 0.75rem; /* 12px */
   width: 100%;
-  padding: 0 10px;
+  padding: 0 0.625rem; /* 10px */
 }
 
 .schoolBadge {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 108px;
-  height: 40px;
-  border-radius: 28px;
-  box-shadow: inset 0px 0px 12px 0px rgba(73, 83, 64, 0.25);
+  width: 6.75rem; /* 108px */
+  height: 2.5rem; /* 40px */
+  border-radius: 1.75rem; /* 28px */
+  box-shadow: inset 0px 0px 0.75rem 0px rgba(73, 83, 64, 0.25); /* 12px */
   font-family: var(--font-abhaya-libre), serif;
   font-weight: 800;
-  font-size: 24px;
+  font-size: 1.5rem; /* 24px */
   line-height: 1;
   color: #FFFFFF;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  text-shadow: 0px 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
   opacity: 0.9;
 }
 
@@ -91,17 +91,17 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  gap: 40px;
+  gap: 2.5rem; /* 40px */
 }
 
 .startBtn {
-  width: 262px;
-  height: 80px;
+  width: 16.375rem; /* 262px */
+  height: 5rem; /* 80px */
   background-color: #A4C18B;
-  border-radius: 28px;
+  border-radius: 1.75rem; /* 28px */
   border: none;
   opacity: 0.9;
-  box-shadow: inset 0px 0px 12px 0px rgba(73, 83, 64, 0.25);
+  box-shadow: inset 0px 0px 0.75rem 0px rgba(73, 83, 64, 0.25);
   
   display: flex;
   justify-content: center;
@@ -113,11 +113,11 @@
 .startBtnText {
   font-family: var(--font-abhaya-libre), serif;
   font-weight: 800;
-  font-size: 45px;
+  font-size: 2.8125rem; /* 45px */
   line-height: 1.18;
   color: #FFFFFF;
   -webkit-text-stroke: 1px #A2BDFF;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  text-shadow: 0px 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
 }
 
 .startBtn:active {
@@ -128,5 +128,5 @@
   font-size: 0.8rem;
   color: rgba(0, 0, 0, 0.6);
   margin: 0;
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem; /* 20px */
 }

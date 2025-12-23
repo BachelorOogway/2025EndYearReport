@@ -12,7 +12,7 @@ export default function Footer() {
         className={gochiHand.className}
         style={{
           fontStyle: "normal",
-          fontSize: "25px",
+          fontSize: "1.5rem",
           lineHeight: "29px",
           color: "#93B9CE",
           margin: 0,

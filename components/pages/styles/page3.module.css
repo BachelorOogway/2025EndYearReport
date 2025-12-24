@@ -8,9 +8,6 @@
   align-items: center;
   /* Fallback background color */
   background-color: #f7e2b2;
-  /* Animation vars */
-  --step-delay: 0.3s;
-  --line-duration: 0.8s;
 }
 
 .background {

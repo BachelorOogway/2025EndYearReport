@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import PageWrapper from "@/components/PageWrapper";
 import usePageManager from "@/hooks/usePageManager";
@@ -13,7 +13,8 @@ export default function Page3() {
   
   // Toggle for Easter Egg mode (restoring design as Easter Egg version by default)
   const [isEasterEgg] = useState(false);
-  const [animKey, setAnimKey] = useState(0);
+  const [showHint, setShowHint] = useState(false);
+  const timersRef = useRef<NodeJS.Timeout[]>([]);
 
   // Mock Data
   const summary = {
@@ -29,21 +30,68 @@ export default function Page3() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [summary.userJoinDate]);
 
-  function onShow() {
-    setAnimKey(prev => prev + 1);
+  // 清理 timers
+  const clearTimers = useCallback(() => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+  }, []);
+
+  useEffect(() => {
+    return () => clearTimers();
+  }, [clearTimers]);
+
+  // 文本逐行左→右浮现
+  function reveal(selector: string, delayMs: number, durationMs = 1000) {
+    // 先重置
+    document.querySelectorAll<HTMLElement>(selector).forEach((el) => {
+      el.classList.remove("reveal-line");
+      el.classList.add("hide");
+      void el.offsetWidth;
+    });
+
+    const timer = setTimeout(() => {
+      document.querySelectorAll<HTMLElement>(selector).forEach((el) => {
+        el.classList.remove("hide");
+        el.classList.add("reveal-line");
+        el.style.setProperty("--reveal-duration", `${durationMs}ms`);
+      });
+    }, delayMs);
+    timersRef.current.push(timer);
   }
 
-  // 最后一行的 order，用于计算 Hint 的 delay
-  // Top (1~5) + Bottom (6~7) = 7
-  // EasterEgg (8~9)
-  const lastOrder = isEasterEgg ? 9 : 7;
+  function onShow() {
+    clearTimers();
+    setShowHint(false); // 强制重置 Hint 状态
+
+    let t = 100; // 初始延迟缩短为 100ms
+    const stepSlow = 300; 
+
+    // Top Section
+    reveal(".page3-reveal-1", t); // Title
+    reveal(".page3-reveal-2", (t += stepSlow)); // 噗噗在...
+    reveal(".page3-reveal-3", (t += stepSlow)); // 悄然上线
+    reveal(".page3-reveal-4", (t += stepSlow)); // 你在...
+    reveal(".page3-reveal-5", (t += stepSlow)); // 与噗噗相遇
+
+    // Middle Section - Circle (Static, no reveal)
+
+    // Bottom Section
+    reveal(".page3-reveal-6", (t += stepSlow)); // 我们已经相互陪伴了
+    reveal(".page3-reveal-7", (t += stepSlow)); // 879 天！
+    reveal(".page3-reveal-8", (t += stepSlow)); // 你是第...登岛的伙伴
+    reveal(".page3-reveal-9", (t += stepSlow)); // 是噗噗最珍贵的元老
+
+    const hintTimer = setTimeout(() => setShowHint(true), (t += 600));
+    timersRef.current.push(hintTimer);
+  }
 
   return (
     <PageWrapper 
       pageNumber={PAGE_NUMBER} 
       onShow={onShow}
+      onAppendNext={() => setShowHint(false)}
     >
-      <div key={animKey} className={styles.container} id="page3-container">
+      <div className={styles.container} id="page3-container">
         {/* Background */}
         <div className={styles.background}>
           <Image 
@@ -57,38 +105,21 @@ export default function Page3() {
         <div className={styles.content}>
           {/* Top Section */}
           <div className={styles.topSection}>
-            <span 
-              className={`${styles.titleEnglish} reveal-line`}
-              style={{ '--order': 1 } as React.CSSProperties}
-            >
-              At the Beginning....
-            </span>
+            <span className={`${styles.titleEnglish} hide page3-reveal-1`}>At the Beginning....</span>
             
             <div className={styles.infoGroup}>
-              <div 
-                className={`${styles.textRow} reveal-line`}
-                style={{ '--order': 2 } as React.CSSProperties}
-              >
+              <div className={`${styles.textRow} hide page3-reveal-2`}>
                 <span className={styles.fontPrimary}>噗噗在</span>
                 <span className={styles.fontPrimary}>【2023年7月28日】</span>
               </div>
-              <div 
-                className={`${styles.textRow} reveal-line`}
-                style={{ '--order': 3 } as React.CSSProperties}
-              >
+              <div className={`${styles.textRow} hide page3-reveal-3`}>
                 <span className={styles.fontPrimary}>悄然上线</span>
               </div>
-              <div 
-                className={`${styles.textRow} reveal-line`}
-                style={{ '--order': 4 } as React.CSSProperties}
-              >
+              <div className={`${styles.textRow} hide page3-reveal-4`}>
                 <span className={styles.fontPrimary}>你在</span>
                 <span className={styles.fontPrimary}>【2023年7月28日】</span>
               </div>
-              <div 
-                className={`${styles.textRow} reveal-line`}
-                style={{ '--order': 5 } as React.CSSProperties}
-              >
+              <div className={`${styles.textRow} hide page3-reveal-5`}>
                 <span className={styles.fontPrimary}>与噗噗相遇~</span>
               </div>
             </div>
@@ -107,16 +138,8 @@ export default function Page3() {
           {/* Bottom Section */}
           <div className={styles.bottomSection}>
             <div className={styles.statGroup}>
-              <span 
-                className={`${styles.fontPrimary} reveal-line`}
-                style={{ '--order': 6 } as React.CSSProperties}
-              >
-                我们已经相互陪伴了
-              </span>
-              <div 
-                className={`${styles.textRow} reveal-line`}
-                style={{ '--order': 7 } as React.CSSProperties}
-              >
+              <span className={`${styles.fontPrimary} hide page3-reveal-6`}>我们已经相互陪伴了</span>
+              <div className={`${styles.textRow} hide page3-reveal-7`}>
                  <span className={styles.highlightText}>{daysTogether}</span>
                  <span className={styles.fontPrimary}>天！</span>
               </div>
@@ -124,41 +147,23 @@ export default function Page3() {
 
             {isEasterEgg && (
               <div className={styles.statGroup}>
-                <div 
-                  className={`${styles.textRow} reveal-line`}
-                  style={{ '--order': 8 } as React.CSSProperties}
-                >
+                <div className={`${styles.textRow} hide page3-reveal-8`}>
                   <span className={styles.fontPrimary}>你是第</span>
                   <span className={styles.highlightText}>{summary.userRank}</span>
                   <span className={styles.fontPrimary}>登岛的伙伴</span>
                 </div>
-                <span 
-                  className={`${styles.fontPrimary} reveal-line`}
-                  style={{ '--order': 9 } as React.CSSProperties}
-                >
-                  是噗噗最珍贵的元老🫶
-                </span>
+                <span className={`${styles.fontPrimary} hide page3-reveal-9`}>是噗噗最珍贵的元老🫶</span>
               </div>
             )}
           </div>
         </div>
-
-        {/* ScrollUpHint also uses reveal-line for delay, but we need to ensure it's positioned correctly */}
-        {/* We wrap it in a div that applies the reveal animation */}
-        <div 
-          className="reveal-line" 
-          style={{ 
-            '--order': lastOrder + 1, 
-            position: 'absolute', 
-            bottom: 0, 
-            left: 0, 
-            width: '100%', 
-            pointerEvents: 'none' 
-          } as React.CSSProperties}
-        >
+      </div>
+      
+      {showHint && (
+        <div className="fade-in">
           <ScrollUpHint />
         </div>
-      </div>
+      )}
     </PageWrapper>
   );
 }

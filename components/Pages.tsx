@@ -26,8 +26,7 @@ import Page23 from "@/components/pages/page23";
 import Page24 from "@/components/pages/page24";
 
 export default function Pages() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { currentPage } = usePageManager() as any; 
+  const { currentPage } = usePageManager(); 
   const PAGES = [
     Page1, Page2, Page3, Page4, Page5, Page6, Page7, Page8,
     Page9, Page10, Page11, Page12, Page13, Page14, Page15, Page16,

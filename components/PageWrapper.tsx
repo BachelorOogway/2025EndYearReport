@@ -47,8 +47,7 @@ export default function PageWrapper({
     const target = e.target as Element;
     const container = e.currentTarget as Element;
     if (shouldIgnoreClick(target, container)) return;
-    // 进入下一页（由 appendNextPage 内部基于 showUpTo 判定是否推进）
-    appendNextPage(pageNumber, autoScrollToNext);
+    appendNextPage(pageNumber, true);
     // 冷却 400ms 防止重复触发
     clickCooldownUntilRef.current = now + 400;
   };

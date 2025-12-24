@@ -9,6 +9,7 @@ type PageEntry = {
 
 type PageManagerContextType = {
   showUpTo: number;
+  currentPage: number; // Added currentPage to type definition
   registerPageRef: (page: number, el: HTMLElement | null) => void;
   onEnterViewportForFirstTime: (page: number, action: () => void) => void;
   appendNextPage: (by: number, scrollTo?: boolean) => void;
@@ -229,16 +230,16 @@ export default function PageManagerProvider({ children }: { children: React.Reac
     };
   }, [showUpTo, currentPage, appendNextPage]);
 
-  const value = useMemo<PageManagerContextType & { currentPage: number }>(() => ({
+  const value = useMemo<PageManagerContextType>(() => ({
     showUpTo,
+    currentPage,
     registerPageRef,
     onEnterViewportForFirstTime,
     appendNextPage,
     isActive,
     onAppendNext,
     offAppendNext,
-    currentPage,
-  }), [showUpTo, registerPageRef, onEnterViewportForFirstTime, appendNextPage, isActive, onAppendNext, offAppendNext, currentPage]);
+  }), [showUpTo, currentPage, registerPageRef, onEnterViewportForFirstTime, appendNextPage, isActive, onAppendNext, offAppendNext]);
 
   return <PageManagerContext.Provider value={value}>{children}</PageManagerContext.Provider>;
 }

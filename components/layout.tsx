@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import Footer from "@/components/Footer";
+// Footer is removed from here to handle global logic inside PageManagerProvider
 
 type LayoutProps = {
   children: ReactNode;
@@ -10,7 +10,6 @@ export default function Layout({ children }: LayoutProps) {
     <div className="phone-shell">
       <div className="phone-content">
         {children}
-        <Footer />
       </div>
     </div>
   );

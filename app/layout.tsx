@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Italiana } from "next/font/google";
+import { Italiana, Leckerli_One } from "next/font/google";
 import "./globals.css";
 
 const italiana = Italiana({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-italiana",
+});
+
+const leckerliOne = Leckerli_One({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-leckerli-one",
 });
 
 const abhayaLibre = localFont({
@@ -28,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${abhayaLibre.variable} ${italiana.variable}`}>
+      <body className={`${abhayaLibre.variable} ${italiana.variable} ${leckerliOne.variable}`}>
         {children}
       </body>
     </html>

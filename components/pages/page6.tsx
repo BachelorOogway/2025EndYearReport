@@ -10,7 +10,7 @@ type UserType = 'morning' | 'day' | 'night' | 'healthy' | 'average';
 
 export default function Page6() {
   // Mock backend response - change this to test different variants
-  const userType: UserType = 'night' as UserType;
+  const userType: UserType = 'average' as UserType;
 
   switch (userType) {
     case 'morning':

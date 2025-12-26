@@ -222,13 +222,6 @@ export default function Night() {
         <div className={`${styles.centerText} ${styles.hide} page6-night-reveal-7`}>
           “嘘——夜晚的灵感正在为你开会”
         </div>
-
-        <button 
-          onClick={scrollToNext}
-          className={styles.nextButton}
-        >
-          Show Next Page
-        </button>
         
         {/* Reusing Morning's Mountain Assets */}
         <div className={styles.tree}>

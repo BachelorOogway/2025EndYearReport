@@ -1,0 +1,281 @@
+.container {
+  width: 100%;
+  height: var(--height);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #c6e2ff;
+  padding: 0;
+}
+
+.hide {
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.headerText {
+  margin-top: 4rem; /* 64px */
+  font-family: var(--font-italiana), serif;
+  font-size: 2.25rem; /* 36px */
+  font-weight: 400;
+  color: #E04343;
+  line-height: 2.625rem; /* 42px */
+  z-index: 20;
+  text-transform: uppercase;
+}
+
+.centerText {
+  font-family: var(--font-abhaya-libre), serif;
+  font-weight: 800;
+  font-size: 1.125rem; /* 18px */
+  color: #a03700;
+  text-align: center;
+  white-space: pre-wrap;
+  margin-top: 2rem;
+  z-index: 20;
+}
+
+.chartContainer {
+  /* width & height set via inline style to ensure Recharts ResponsiveContainer works */
+  margin-top: 2rem;
+  padding: 0;
+  z-index: 20;
+  flex-shrink: 0;
+}
+
+.statsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  z-index: 20;
+}
+
+.statRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.statText {
+  font-family: var(--font-abhaya-libre), serif;
+  font-weight: 800;
+  font-size: 1.125rem; /* 18px */
+  color: #a03700;
+  text-align: center;
+}
+
+.statHighlight {
+  font-family: var(--font-abhaya-libre), serif;
+  font-weight: 800;
+  font-size: 2.1875rem; /* 35px */
+  color: #a03700;
+}
+
+/* Legend Styles */
+.legend {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  z-index: 20;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legendLine {
+  width: 2rem;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.legendText {
+  font-family: var(--font-abhaya-libre), serif;
+  font-size: 0.875rem; /* 14px */
+  color: #ac7f5e;
+}
+
+/* Chart Animation */
+.chartRevealRect {
+  width: 0;
+  transition: none; /* Instant reset when class is removed */
+}
+
+.chartRevealRect.play {
+  width: 100%;
+  transition: width 2s ease-in-out;
+}
+
+/* Hide original title and button if present, or I will remove them in TSX */
+.title, .nextButton {
+  display: none;
+}
+.stone{
+  position: absolute;
+  width: 180%; 
+  height:20%; 
+  bottom:0;
+  left: -35%;
+  z-index: 11;
+  pointer-events: none; /* 防止遮挡交互 */
+}
+.group{
+   position: absolute;
+  width: 100%; 
+  height: 4.5%; 
+  bottom:0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11;
+  pointer-events: none; /* 防止遮挡交互 */
+}
+.sun{
+  position:absolute;
+  width:8.56rem;
+  height:8.56rem;
+  left: 50%;
+  transform: translateX(-50%);
+  top:4.9rem;
+  z-index:11;
+
+}
+.m1 {
+  position: absolute;
+  width: 100%; 
+  height: 19.2%; 
+  bottom:0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: none; /* 防止遮挡交互 */
+}
+.m2 {
+  position: absolute;
+  width: 100%; 
+  height: 29%;
+  bottom: 0.5rem; 
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9;
+  pointer-events: none; /* 防止遮挡交互 */
+}
+.m3{
+  position: absolute;
+  width: 100%; 
+  height: 24%; 
+  bottom: 12%; 
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 8;
+  pointer-events: none; /* 防止遮挡交互 */
+
+}
+.m4{
+  position: absolute;
+  width: 100%; 
+  height: 27%; 
+  bottom: 20%; 
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 7;
+  pointer-events: none; /* 防止遮挡交互 */
+}
+.m5{
+  position: absolute;
+  width: 100%; 
+  height: 25.5%; 
+  bottom: 31%; 
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  pointer-events: none; /* 防止遮挡交互 */
+}
+.tree {
+  position: absolute;
+  width: 100%; 
+  height: 22.5%; 
+  bottom: 0%; 
+  left: 50%;
+  transform: translateX(-50%) scale(1.05); /* 预先放大防止露白 */
+  z-index: 12;
+  pointer-events: none;
+  transform-origin: bottom center;
+  animation: sway 6s ease-in-out infinite; /* 减慢速度更自然 */
+}
+
+@keyframes sway {
+  0% { transform: translateX(-50%) scale(1.05) rotate(0deg); }
+  33% { transform: translateX(-50%) scale(1.06) rotate(1deg); } /* 微幅放大配合旋转 */
+  66% { transform: translateX(-50%) scale(1.06) rotate(-1deg); }
+  100% { transform: translateX(-50%) scale(1.05) rotate(0deg); }
+}
+
+.chartRevealRect {
+  width: 0;
+  height: 100%;
+  transition: none;
+}
+
+.chartRevealRect.play {
+  width: 100%;
+  transition: width 2s ease-in-out;
+}
+ 
+
+.title {
+  color: #fff;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.chartContainer {
+  width: 100%;
+  height: 18.75rem; /* 300px */
+}
+
+.legend {
+  display: flex;
+  gap: 1.25rem; /* 20px */
+  margin-top: 1.25rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.legendLine {
+  width: 1.25rem;
+  height: 0.2rem;
+  border-radius: 0.1rem;
+}
+
+.legendText {
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.nextButton {
+  margin-top: 2.5rem;
+  padding: 0.6rem 1.25rem;
+  background: #fff;
+  border: none;
+  border-radius: 1.25rem;
+  cursor: pointer;
+  font-weight: bold;
+  color: #082746;
+  transition: opacity 0.2s;
+}
+
+.nextButton:active {
+  opacity: 0.8;
+}

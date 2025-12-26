@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import PageWrapper from "@/components/PageWrapper";
 import usePageManager from "@/hooks/usePageManager";
 import ScrollUpHint from "@/components/ScrollUpHint";
-import styles from '../styles/page6.module.css';
+import styles from '../styles/page6Night.module.css';
 
 export default function Night() {
   const PAGE_NUMBER = 6;

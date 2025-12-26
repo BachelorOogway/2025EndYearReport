@@ -205,7 +205,7 @@ export default function Page2() {
                 >
                     {/* Small Tree (Sapling) - Same as Day */}
                     <Image 
-                      src="/imgs/page2/tree.svg" 
+                      src="/imgs/page2/page2Day/tree.png" 
                       alt="Small Tree" 
                       fill 
                       className={`${styles.smallTree} ${isGrowing ? styles.smallTreeHidden : ""}`}

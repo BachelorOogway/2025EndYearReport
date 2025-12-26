@@ -13,7 +13,7 @@ import {
   Tooltip,
   ResponsiveContainer
 } from 'recharts';
-import styles from '../styles/page6.module.css';
+import styles from '../styles/page6Morning.module.css';
 
 // Mock Data for the chart
 const data = [
@@ -78,11 +78,8 @@ export default function Morning() {
     // Header
     reveal(".page6-reveal-1", t); 
 
-    // Chart container reveal
-    reveal(".page6-reveal-2", (t += stepSlow));
-    
-    // Trigger chart drawing animation slightly after container appears
-    const chartTimer = setTimeout(() => setPlayChart(true), t + 300);
+    // Trigger chart drawing animation immediately or shortly after header
+    const chartTimer = setTimeout(() => setPlayChart(true), t + 100);
     timersRef.current.push(chartTimer);
 
     // Legend
@@ -115,7 +112,7 @@ export default function Morning() {
         </div>
         
         <div 
-          className={`${styles.chartContainer} ${styles.hide} page6-reveal-2`}
+          className={styles.chartContainer}
           style={{ width: '65.8%', height: '11.56rem' }}
         >
           <ResponsiveContainer width="100%" height="100%">

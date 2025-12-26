@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Italiana } from "next/font/google";
 import "./globals.css";
 
-
+const italiana = Italiana({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-italiana",
+});
 
 const abhayaLibre = localFont({
   src: "./fonts/AbhayaLibre-ExtraBold.ttf",
@@ -23,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${abhayaLibre.variable}`}>
+      <body className={`${abhayaLibre.variable} ${italiana.variable}`}>
         {children}
       </body>
     </html>

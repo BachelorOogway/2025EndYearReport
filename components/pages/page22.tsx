@@ -3,6 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import PageWrapper from "@/components/PageWrapper";
 import { sendViewPageTracking } from "@/utils/dom";
+import styles from "./styles/page22.module.css";
 
 // Component24 (Page22) - 成就总结页组件
 // 进入页面时，图片元素从四周滑动出现
@@ -142,7 +143,7 @@ export default function Page22() {
   }
 
   return (
-    <PageWrapper pageNumber={PAGE_NUMBER} onShow={handleShow}>
+    <PageWrapper pageNumber={PAGE_NUMBER} onShow={handleShow} className={styles.container}>
       {/* 第一部分：今年成就 */}
       <div className="content-block">
         {/* 文本内容 */}
@@ -204,11 +205,11 @@ export default function Page22() {
 
         {/* 年份树和卡片容器 */}
         <div className="page22-tree-2 hide relative w-full max-w-[18rem] h-[18rem] mx-auto my-6">
-          {/* 树（有芒果） */}
+          {/* 树（没有芒果） */}
           <div className="relative w-full h-full">
             <Image 
               src="/imgs/page22/tree.png" 
-              alt="Tree with Mangoes" 
+              alt="Tree without Mangoes" 
               fill
               className="object-contain"
             />

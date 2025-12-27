@@ -223,11 +223,6 @@ a {
   100% { opacity: 0; }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-
 /* Footer (ported from 2024) */
 .footer-wrapper {
   --_clr-text: var(--clr-offwhite);

@@ -9,6 +9,7 @@ type PageEntry = {
 
 type PageManagerContextType = {
   showUpTo: number;
+  currentPage: number; // Added currentPage to type definition
   registerPageRef: (page: number, el: HTMLElement | null) => void;
   onEnterViewportForFirstTime: (page: number, action: () => void) => void;
   appendNextPage: (by: number, scrollTo?: boolean) => void;
@@ -30,10 +31,12 @@ export default function PageManagerProvider({ children }: { children: React.Reac
   const touchStartYRef = useRef<number | null>(null);
   const cooldownUntilRef = useRef<number>(0);
   const thresholdPxRef = useRef<number>(0);
+  const touchEndCooldownRef = useRef<number>(0); // 防止 touchEnd 和 wheel 同时触发
 
   const registerPageRef = useCallback((page: number, el: HTMLElement | null) => {
     const prev = pagesRef.current.get(page) || { el: null, firstEntered: false };
     pagesRef.current.set(page, { ...prev, el });
+    // 即使注册过，也需要重新 observe 确保 onEnterViewportForFirstTime 逻辑（虽然这里是首次注册，但兼容性好）
     if (el && observerRef.current) {
       observerRef.current.observe(el);
     }
@@ -41,6 +44,12 @@ export default function PageManagerProvider({ children }: { children: React.Reac
 
   const onEnterViewportForFirstTime = useCallback((page: number, action: () => void) => {
     const prev = pagesRef.current.get(page) || { el: null, firstEntered: false };
+    // 重置 firstEntered 标记，确保如果传入新 action，能有机会再次触发（尽管名字叫 ForFirstTime，但结合 showUpTo 逻辑，每次进入可视区都需要触发 reveal）
+    // 修改逻辑：这里更名为 onEnterViewport 可能更贴切，但为了兼容旧代码，我们保留名字，但允许通过 observer 每次进入时触发
+    // 注意：原始需求是“每次进入页面时，重新显示动画”。
+    // 现有的 observer 逻辑只在 !state.firstEntered 时触发。
+    // 我们需要修改 observer 的回调逻辑，支持“每次进入”。
+    // 但为了避免多次绑定，这里只更新 action。
     pagesRef.current.set(page, { ...prev, action });
     const el = prev.el || (typeof document !== "undefined" ? document.getElementById(`page${page}`) : null);
     if (el && observerRef.current) {
@@ -86,7 +95,7 @@ export default function PageManagerProvider({ children }: { children: React.Reac
     if (typeof window === "undefined") return;
     observerRef.current = new IntersectionObserver(
       (entries) => {
-        // 按页面编号排序后逐一处理，避免并发漏触发
+        // 按页面编号排序后逐一处理
         const handled = entries
           .map((entry) => {
             const target = entry.target as HTMLElement;
@@ -101,21 +110,27 @@ export default function PageManagerProvider({ children }: { children: React.Reac
         handled.forEach(({ entry, target, page }) => {
           const state = pagesRef.current.get(page);
           if (!state) return;
-          if (entry.isIntersecting && !state.firstEntered) {
-            state.firstEntered = true;
-            pagesRef.current.set(page, state);
-            try {
-              state.action?.();
-            } finally {
-              observerRef.current?.unobserve(target);
-            }
+          
+          // 修改核心：只要进入视口且是当前页，就触发 action (用于播放动画)
+          // 并且当离开视口时，如果需要重置，可以在 action 内部处理或者这里增加 onLeave 回调
+          // 简便起见，我们在 action 中执行“播放动画”，而重置逻辑交由组件在 useEffect 依赖 currentPage 变化时处理，
+          // 或者更简单的：每次 currentPage 变化，Page 组件重新渲染会重置状态？不一定。
+          // 最佳实践：当 currentPage 变为 page 时，触发 onShow。
+          
+          // 但这里是 IntersectionObserver，它监控的是滚动位置。
+          // 我们的架构是 Scroll Snap，currentPage 决定了哪个页面在视口中。
+          // 所以其实可以不用 IntersectionObserver 来触发动画，而是直接监听 currentPage 变化。
+          // 但为了兼容现有逻辑（onEnterViewportForFirstTime），我们保持 observer，
+          // 但去掉 firstEntered 锁，改为“只要是 currentPage 且 intersecting 就触发”。
+          
+          if (entry.isIntersecting && page === currentPage) {
+             state.action?.();
           }
         });
       },
-      { rootMargin }
+      { rootMargin: "-10% 0px -10% 0px" } // 稍微收缩范围，确保完全进入
     );
 
-    // 已注册元素需要补观察
     pagesRef.current.forEach((val) => {
       if (val.el) observerRef.current?.observe(val.el);
     });
@@ -124,15 +139,14 @@ export default function PageManagerProvider({ children }: { children: React.Reac
       observerRef.current?.disconnect();
       observerRef.current = null;
     };
-  }, []);
+  }, [currentPage]); // 依赖 currentPage，确保每次切页都能重新评估
 
   // 容器滚动/触摸推进
   useEffect(() => {
     if (typeof window === "undefined") return;
     const container = document.getElementById("pages-wrapper");
     if (!container) return;
-    // 极小阈值，只要有滑动意图就触发
-    thresholdPxRef.current = 15;
+    thresholdPxRef.current = 15; // 提高一点阈值防止误触？保持 15 灵敏度
 
     const attemptNavigation = (direction: 'next' | 'prev') => {
       const now = Date.now();
@@ -142,7 +156,6 @@ export default function PageManagerProvider({ children }: { children: React.Reac
         if (currentPage < showUpTo) {
           setCurrentPage(prev => prev + 1);
         } else {
-          // 如果当前是最后一页，尝试解锁下一页并跳转
           appendNextPage(showUpTo, true);
         }
       } else {
@@ -151,19 +164,20 @@ export default function PageManagerProvider({ children }: { children: React.Reac
         }
       }
       
-      cooldownUntilRef.current = now + 600;
+      // 增加冷却时间到 1000ms，防止连续滚动直接跳两页
+      cooldownUntilRef.current = now + 1000;
       scrollAccumRef.current = 0;
       touchStartYRef.current = null;
     };
 
     const onWheel = (e: WheelEvent) => {
-      // 阻止默认滚动行为（尽管 overflow: hidden 已经阻止了，双重保险）
       e.preventDefault();
-      
       const now = Date.now();
       if (now < cooldownUntilRef.current) return;
+      
       scrollAccumRef.current += e.deltaY;
       
+      // 增加防抖累积判断，不仅仅是阈值，还可以重置
       if (Math.abs(scrollAccumRef.current) >= thresholdPxRef.current) {
         if (scrollAccumRef.current > 0) {
           attemptNavigation('next');
@@ -177,7 +191,6 @@ export default function PageManagerProvider({ children }: { children: React.Reac
       touchStartYRef.current = e.touches[0]?.clientY ?? null;
     };
     
-    // 核心：在 touchmove 中阻止默认行为，解决下拉刷新/回弹冲突
     const onTouchMove = (e: TouchEvent) => {
       if (e.cancelable) {
         e.preventDefault();
@@ -187,10 +200,12 @@ export default function PageManagerProvider({ children }: { children: React.Reac
     const onTouchEnd = (e: TouchEvent) => {
       const now = Date.now();
       if (now < cooldownUntilRef.current) return;
+      if (now < touchEndCooldownRef.current) return; // 避免 touchEnd 后立即触发 wheel (某些设备)
+      
       const endY = e.changedTouches[0]?.clientY ?? null;
       if (touchStartYRef.current == null || endY == null) return;
       
-      const delta = touchStartYRef.current - endY; // Positive = Finger Up (Scroll Down) = Next
+      const delta = touchStartYRef.current - endY;
       if (Math.abs(delta) >= thresholdPxRef.current) {
         if (delta > 0) {
           attemptNavigation('next');
@@ -199,9 +214,9 @@ export default function PageManagerProvider({ children }: { children: React.Reac
         }
       }
       touchStartYRef.current = null;
+      touchEndCooldownRef.current = now + 100; 
     };
 
-    // passive: false 是调用 preventDefault 的关键
     container.addEventListener("wheel", onWheel, { passive: false });
     container.addEventListener("touchstart", onTouchStart, { passive: true });
     container.addEventListener("touchmove", onTouchMove, { passive: false });
@@ -215,16 +230,16 @@ export default function PageManagerProvider({ children }: { children: React.Reac
     };
   }, [showUpTo, currentPage, appendNextPage]);
 
-  const value = useMemo<PageManagerContextType & { currentPage: number }>(() => ({
+  const value = useMemo<PageManagerContextType>(() => ({
     showUpTo,
+    currentPage,
     registerPageRef,
     onEnterViewportForFirstTime,
     appendNextPage,
     isActive,
     onAppendNext,
     offAppendNext,
-    currentPage,
-  }), [showUpTo, registerPageRef, onEnterViewportForFirstTime, appendNextPage, isActive, onAppendNext, offAppendNext, currentPage]);
+  }), [showUpTo, currentPage, registerPageRef, onEnterViewportForFirstTime, appendNextPage, isActive, onAppendNext, offAppendNext]);
 
   return <PageManagerContext.Provider value={value}>{children}</PageManagerContext.Provider>;
 }

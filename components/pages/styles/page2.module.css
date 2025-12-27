@@ -49,7 +49,7 @@
 
 /* Text Group 2 */
 .textGroup2 {
-  margin-top: 2.75rem; /* 44px */
+  margin-top: 1rem; 
   padding-left: 3.125rem; /* 50px */
   width: 100%;
   z-index: 2;
@@ -210,9 +210,64 @@
   display: none; /* Remove footer text */
 }
 
-/* Object fit utilities */
-.objectContain {
-  object-fit: contain;
+/* Night Mode Styles */
+.nightContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background-color: #2a3a5a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Initial animation states - handled by inline styles and hide class from globals.css */
+.nightBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.nightTextGroup {
+  z-index: 2;
+  width: 100%;
+  padding-left: 3.06rem;
+  padding-right: 2.375rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 13.3rem; /* ~229px */
+  gap: 2.5rem; /* Gap between "开启" and "夜深了" groups */
+}
+
+.nightTextBlock {
+  display: flex;
+  margin-top:-0.75rem;
+  flex-direction: column;
+  gap: 0.6875rem; /* Similar to day text group gap */
+}
+
+.fontNight {
+  font-family: var(--ff-primary);
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+/* Container for the tree in Night mode, matching .sun dimensions/positioning but invisible */
+.nightTreeContainer {
+  position: relative;
+  width: 17.3125rem; /* 277px */
+  height: 17.3125rem;
+  /* No background, no border-radius */
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+}

@@ -1,0 +1,167 @@
+.container {
+  width: 100%;
+  height: var(--height);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f4c9aa;
+  padding: 0;
+}
+
+.hide {
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+/* Chart Styles */
+.chartContainer {
+  margin-top: 4rem; /* Top margin to replace header */
+  padding: 0;
+  z-index: 20;
+  flex-shrink: 0;
+}
+
+.chartRevealRect {
+  width: 0;
+  transition: none;
+}
+
+.chartRevealRect.play {
+  width: 100%;
+  transition: width 2s ease-in-out;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  z-index: 20;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legendLine {
+  width: 2rem;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.legendText {
+  font-family: var(--font-abhaya-libre), serif;
+  font-size: 0.875rem;
+  color: #842e00; /* Dark Brown */
+}
+
+/* Stats */
+.statsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  z-index: 20;
+}
+
+.statRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.statText {
+  font-family: var(--font-abhaya-libre), serif;
+  font-weight: 800;
+  font-size: 1.125rem; /* 18px */
+  color: #842e00;
+  text-align: center;
+}
+
+.statHighlight {
+  font-family: var(--font-abhaya-libre), serif;
+  font-weight: 800;
+  font-size: 2.1875rem; /* 35px */
+  color: #842e00;
+}
+
+/* Window & Text */
+.windowContainer {
+  position: absolute;
+  bottom: 10%; /* Adjust based on layout */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%; /* Adjust based on image aspect ratio */
+  max-width: 22rem;
+  aspect-ratio: 327/172; /* Approx ratio from Figma 289/172 */
+  z-index: 20;
+}
+
+.windowBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.windowContent {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 3rem 3rem 1.5rem 2rem; /* Increased right padding for scrollbar, left for breathing room */
+}
+
+.windowText {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.windowLine {
+  font-family: var(--font-leckerli-one), cursive;
+  font-size: 1.25rem; /* 20px */
+  color: #000000;
+  line-height: 1.4;
+}
+
+.cat {
+  position: absolute;
+  bottom: -10%;
+  left: -10%;
+  width: 25%; /* Adjust size */
+  height: auto;
+  aspect-ratio: 1/1;
+  z-index: 25;
+}
+
+/* Tree */
+.tree {
+  position: absolute;
+  right: -15%; /* Adjusted right position */
+  top: 40%;
+  transform: translateY(-50%);
+  width: 35%; /* Reduced from 50% */
+  height: auto;
+  aspect-ratio: 1/2; /* Placeholder */
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Next Button (Hidden or styled) */
+.nextButton {
+  display: none;
+}

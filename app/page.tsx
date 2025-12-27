@@ -1,6 +1,7 @@
 import Layout from "@/components/layout";
 import Pages from "@/components/Pages";
 import PageManagerProvider from "@/components/PageManagerProvider";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
         <div className="pages-wrapper" id="pages-wrapper">
           <Pages />
         </div>
+        <Footer />
       </PageManagerProvider>
     </Layout>
   );

@@ -1,0 +1,166 @@
+.container {
+  width: 100%;
+  height: var(--height);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(180deg, #dceaff 37.5%, #fdfcc9 100%);
+  padding: 0;
+  color: #5B3A18; /* Dark brown default text color */
+}
+
+.hide {
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.statsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 5rem;
+  z-index: 20;
+  width: 100%;
+}
+
+.statRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  z-index: 20;
+}
+
+.statText {
+  font-family: var(--font-abhaya-libre), serif;
+  font-weight: 800;
+  font-size: 1.125rem;
+  color: #6B3402; /* Darker brown */
+  text-align: center;
+}
+
+.statTextLarge {
+  font-family: var(--font-abhaya-libre), serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: #6B3402;
+}
+
+.statHighlight {
+  font-family: var(--font-abhaya-libre), serif;
+  font-weight: 800;
+  font-size: 2.25rem;
+  color: #6B3402;
+}
+
+.chartContainer {
+  margin-top: 1.5rem;
+  padding: 0;
+  z-index: 20;
+  flex-shrink: 0;
+}
+
+.chartRevealRect {
+  width: 0;
+  height: 100%;
+  transition: none;
+}
+
+.chartRevealRect.play {
+  width: 100%;
+  transition: width 2s ease-in-out;
+}
+
+.legend {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  z-index: 20;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legendLine {
+  width: 2rem;
+  height: 2px; /* Stroke style */
+  background: transparent;
+  position: relative;
+}
+
+/* Simulate stroke line for legend */
+.legendLine::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: inherit;
+  transform: translateY(-50%);
+}
+
+/* We can also just use simple div for legend line as before but thin */
+
+.legendText {
+  color: #333;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.bottomSection {
+    position: absolute;
+    bottom: 5rem;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 2rem;
+    gap: 1rem;
+}
+
+.quoteText {
+  font-family: var(--font-abhaya-libre), serif;
+  font-size: 1.125rem;
+  color: #E89E68; /* Light orange/brown from design */
+  font-weight: 700;
+  white-space: pre-line;
+  text-align: left;
+  line-height: 1.5;
+  margin-bottom: 3rem;
+  z-index: 20;
+  flex: 1;
+}
+
+.rabbitContainer {
+    width: 12rem;
+    height: 12rem;
+    position: relative;
+    z-index: 10;
+}
+
+.rabbitImage {
+    object-fit: contain;
+    /* Filter to make the cat look more like a silhouette if needed, or just keep as is */
+}
+
+.footerText {
+  position: absolute;
+  bottom: 1.5rem;
+  font-size: 1.5rem; /* 25px from figma */
+  color: #93b9ce;
+  z-index: 20;
+  font-family: var(--font-gochi-hand), cursive;
+}
+
+.nextButton {
+  display: none; /* Hide button, rely on scroll/click */
+}

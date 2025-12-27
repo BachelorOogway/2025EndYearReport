@@ -1,24 +1,169 @@
 "use client";
+import { useState, useMemo, useRef, useCallback, useEffect } from "react";
+import Image from "next/image";
 import PageWrapper from "@/components/PageWrapper";
 import usePageManager from "@/hooks/usePageManager";
-
-// Minimal page template for copy-paste
-// Usage: duplicate this file as pageX.tsx, update PAGE_NUMBER and content
+import ScrollUpHint from "@/components/ScrollUpHint";
+import styles from "./styles/page3.module.css";
 
 export default function Page3() {
-  const PAGE_NUMBER = 3; // replace with actual page number after copy
+  const PAGE_NUMBER = 3;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { appendNextPage } = usePageManager();
+  
+  // Toggle for Easter Egg mode (restoring design as Easter Egg version by default)
+  const [isEasterEgg] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const timersRef = useRef<NodeJS.Timeout[]>([]);
 
-  const scrollToNext = () => {
-    appendNextPage(PAGE_NUMBER, true);
+  // Mock Data
+  const summary = {
+    appLaunchDate: "2023-07-28",
+    userJoinDate: "2023-07-28",
+    userRank: 12345,
   };
 
+  const daysTogether = useMemo(() => {
+    const start = new Date(summary.userJoinDate).getTime();
+    const now = Date.now();
+    return Math.floor((now - start) / (1000 * 60 * 60 * 24));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [summary.userJoinDate]);
+
+  // 清理 timers
+  const clearTimers = useCallback(() => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+  }, []);
+
+  useEffect(() => {
+    return () => clearTimers();
+  }, [clearTimers]);
+
+  // 文本逐行左→右浮现
+  function reveal(selector: string, delayMs: number, durationMs = 1000) {
+    // 先重置
+    document.querySelectorAll<HTMLElement>(selector).forEach((el) => {
+      el.classList.remove("reveal-line");
+      el.classList.add("hide");
+      void el.offsetWidth;
+    });
+
+    const timer = setTimeout(() => {
+      document.querySelectorAll<HTMLElement>(selector).forEach((el) => {
+        el.classList.remove("hide");
+        el.classList.add("reveal-line");
+        el.style.setProperty("--reveal-duration", `${durationMs}ms`);
+      });
+    }, delayMs);
+    timersRef.current.push(timer);
+  }
+
+  function onShow() {
+    clearTimers();
+    setShowHint(false); // 强制重置 Hint 状态
+
+    let t = 100; // 初始延迟缩短为 100ms
+    const stepSlow = 300; 
+
+    // Top Section
+    reveal(".page3-reveal-1", t); // Title
+    reveal(".page3-reveal-2", (t += stepSlow)); // 噗噗在...
+    reveal(".page3-reveal-3", (t += stepSlow)); // 悄然上线
+    reveal(".page3-reveal-4", (t += stepSlow)); // 你在...
+    reveal(".page3-reveal-5", (t += stepSlow)); // 与噗噗相遇
+
+    // Middle Section - Circle (Static, no reveal)
+
+    // Bottom Section
+    reveal(".page3-reveal-6", (t += stepSlow)); // 我们已经相互陪伴了
+    reveal(".page3-reveal-7", (t += stepSlow)); // 879 天！
+    reveal(".page3-reveal-8", (t += stepSlow)); // 你是第...登岛的伙伴
+    reveal(".page3-reveal-9", (t += stepSlow)); // 是噗噗最珍贵的元老
+
+    const hintTimer = setTimeout(() => setShowHint(true), (t += 600));
+    timersRef.current.push(hintTimer);
+  }
+
   return (
-    <PageWrapper pageNumber={PAGE_NUMBER} onShow={() => {}}>
-      <div>
-        <h1>Page {PAGE_NUMBER}</h1>
-        <button onClick={scrollToNext}>Show Next Page</button>
+    <PageWrapper 
+      pageNumber={PAGE_NUMBER} 
+      onShow={onShow}
+      onAppendNext={() => setShowHint(false)}
+    >
+      <div className={styles.container} id="page3-container">
+        {/* Background */}
+        <div className={styles.background}>
+          <Image 
+            src="/imgs/page3/background.svg" 
+            alt="Background" 
+            fill 
+            style={{ objectFit: "cover" }} 
+          />
+        </div>
+
+        <div className={styles.content}>
+          {/* Top Section */}
+          <div className={styles.topSection}>
+            <span className={`${styles.titleEnglish} hide page3-reveal-1`}>At the Beginning....</span>
+            
+            <div className={styles.infoGroup}>
+              <div className={`${styles.textRow} hide page3-reveal-2`}>
+                <span className={styles.fontPrimary}>噗噗在</span>
+                <span className={styles.fontPrimary}>【2023年7月28日】</span>
+              </div>
+              <div className={`${styles.textRow} hide page3-reveal-3`}>
+                <span className={styles.fontPrimary}>悄然上线</span>
+              </div>
+              <div className={`${styles.textRow} hide page3-reveal-4`}>
+                <span className={styles.fontPrimary}>你在</span>
+                <span className={styles.fontPrimary}>【2023年7月28日】</span>
+              </div>
+              <div className={`${styles.textRow} hide page3-reveal-5`}>
+                <span className={styles.fontPrimary}>与噗噗相遇~</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Middle Section - Image (Always Visible) */}
+          <div className={`${styles.middleSection} ${!isEasterEgg ? styles.wideSpacing : ''}`}>
+            <Image 
+              src="/imgs/page3/Circle.png" 
+              alt="Together" 
+              fill 
+              className={styles.circleImage}
+            />
+          </div>
+
+          {/* Bottom Section */}
+          <div className={styles.bottomSection}>
+            <div className={styles.statGroup}>
+              <span className={`${styles.fontPrimary} hide page3-reveal-6`}>我们已经相互陪伴了</span>
+              <div className={`${styles.textRow} hide page3-reveal-7`}>
+                 <span className={styles.highlightText}>{daysTogether}</span>
+                 <span className={styles.fontPrimary}>天！</span>
+              </div>
+            </div>
+
+            {isEasterEgg && (
+              <div className={styles.statGroup}>
+                <div className={`${styles.textRow} hide page3-reveal-8`}>
+                  <span className={styles.fontPrimary}>你是第</span>
+                  <span className={styles.highlightText}>{summary.userRank}</span>
+                  <span className={styles.fontPrimary}>登岛的伙伴</span>
+                </div>
+                <span className={`${styles.fontPrimary} hide page3-reveal-9`}>是噗噗最珍贵的元老🫶</span>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
+      
+      {showHint && (
+        <div className="fade-in">
+          <ScrollUpHint />
+        </div>
+      )}
     </PageWrapper>
   );
 }

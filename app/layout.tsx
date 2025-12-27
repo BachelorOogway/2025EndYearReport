@@ -1,8 +1,25 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Italiana, Leckerli_One, Gochi_Hand } from "next/font/google";
 import "./globals.css";
 
+const italiana = Italiana({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-italiana",
+});
 
+const leckerliOne = Leckerli_One({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-leckerli-one",
+});
+
+const gochiHand = Gochi_Hand({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-gochi-hand",
+});
 
 const abhayaLibre = localFont({
   src: "./fonts/AbhayaLibre-ExtraBold.ttf",
@@ -23,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${abhayaLibre.variable}`}>
+      <body className={`${abhayaLibre.variable} ${italiana.variable} ${leckerliOne.variable} ${gochiHand.variable}`}>
         {children}
       </body>
     </html>

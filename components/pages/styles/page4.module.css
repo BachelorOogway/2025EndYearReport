@@ -1,0 +1,214 @@
+.container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #EBF2E3; /* Fallback color extracted from background */
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 2rem 2rem;
+}
+
+/* Top Section */
+.topSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.titleText {
+  font-family: var(--ff-primary);
+  font-weight: 700;
+  font-size: 1.25rem; /* 20px */
+  color: #000000;
+  line-height: 1.2;
+}
+
+/* Center Section */
+.centerSection {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 1rem;
+}
+
+/* Play Button Area */
+.playButtonWrapper {
+  position: relative;
+  width: 12.25rem; /* 196px */
+  height: 5.5rem; /* 88px */
+  margin-bottom: 1rem; /* Space between button and box */
+  z-index: 5;
+}
+
+.playButton {
+  width: 100%;
+  height: 100%;
+  background-color: #4B7C56;
+  border: 2px solid rgba(120, 169, 166, 0.42);
+  border-radius: 6.25rem; /* 100px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.playButton:active {
+  transform: scale(0.95);
+}
+
+.playIcon {
+  width: 4.5rem; /* 73px */
+  height: 4.3rem; /* 69px */
+  position: relative;
+}
+
+/* Decor Arrow */
+.arrowDecor {
+  position: absolute;
+  right: -3rem;
+  top: 1rem;
+  width: 3rem;
+  height: 3rem;
+}
+
+/* Tree Hole Box Area */
+.treeHoleWrapper {
+  position: relative;
+  width: 16.5rem; /* 263px */
+  height: 13.375rem; /* 214px */
+  margin-top: 1rem;
+}
+
+.treeHoleBox {
+  width: 100%;
+  height: 100%;
+  background-color: #FFFFFF;
+  border: 2px solid #5B9BD5; /* Approximate blue from screenshot */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.treeHoleText {
+  font-family: var(--ff-primary);
+  font-weight: 700;
+  font-size: 1.25rem; /* 20px */
+  color: #000000;
+}
+
+/* Decors around box */
+.personDecor {
+  position: absolute;
+  top: -2.5rem; /* Adjust based on svg visual */
+  left: -1.5rem;
+  width: 4rem; /* ~64px */
+  height: 6rem; /* ~96px */
+  z-index: 2;
+}
+
+.starDecor {
+  position: absolute;
+  bottom: -2rem;
+  right: -2rem;
+  width: 7rem; /* ~114px */
+  height: 6.5rem; /* ~105px */
+  z-index: 2;
+}
+
+/* Bottom Section */
+.bottomSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Left aligned as per design */
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-left: 1rem;
+}
+
+.bottomTextGroup {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.bottomText {
+  font-family: var(--ff-primary);
+  font-weight: 700;
+  font-size: 1.25rem; /* 20px */
+  color: #000000;
+  line-height: 1.2;
+  white-space: pre-wrap; /* Allow newlines */
+}
+
+.fingerIcon {
+  width: 3rem; /* 47px */
+  height: 3rem; /* 48px */
+  position: relative;
+  margin-bottom: 0.2rem;
+}
+
+.keywordText {
+  font-family: var(--ff-primary);
+  font-weight: 700;
+  font-size: 1.8rem; /* 30px */
+  color: #000000;
+  margin-top: 0.5rem;
+}
+
+/* Footer (Page Specific) */
+.pageFooter {
+  position: absolute;
+  bottom: 1.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 2;
+}
+
+.footerText {
+  font-family: 'Gochi Hand', cursive; /* Assuming font is loaded globally */
+  font-size: 1.5rem;
+  color: #FFFFFF; /* White as per design */
+}
+
+/* Animations */
+/* Note: .hide and .reveal-line should be global or imported, 
+   but for CSS Modules we might need to define them or use global composition */
+
+.hide {
+  opacity: 0;
+  transform: translateY(10px);
+}

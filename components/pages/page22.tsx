@@ -4,12 +4,13 @@ import Image from "next/image";
 import PageWrapper from "@/components/PageWrapper";
 import { sendViewPageTracking } from "@/utils/dom";
 import styles from "./styles/page22.module.css";
+import usePageManager from "@/hooks/usePageManager";
 
 // Component24 (Page22) - 成就总结页组件
 // 进入页面时，图片元素从四周滑动出现
 export default function Page22() {
   const PAGE_NUMBER = 22;
-  
+  const { appendNextPage } = usePageManager();
 
   // 模拟数据 - 实际应从 props 或 API 获取
   const achievementCount = 15; // 成就数量
@@ -17,7 +18,13 @@ export default function Page22() {
 
   const handleTreeTrunkClick = () => {
     // 点击树干查看成长足迹的逻辑
-    console.log("点击树干查看成长足迹");
+    // advance to next page (page23)
+    try {
+      appendNextPage(PAGE_NUMBER, true);
+    } catch (e) {
+      // fallback: log
+      console.log("点击树干查看成长足迹");
+    }
   };
 
   

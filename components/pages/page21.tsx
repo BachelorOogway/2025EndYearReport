@@ -1,4 +1,98 @@
 "use client";
+import { useCallback, useRef, useEffect, useState } from "react";
+import Image from "next/image";
+import PageWrapper from "@/components/PageWrapper";
+import usePageManager from "@/hooks/usePageManager";
+import ScrollUpHint from "@/components/ScrollUpHint";
+import styles from "./styles/page21.module.css";
+
+export default function Page21() {
+  const PAGE_NUMBER = 21;
+  const { appendNextPage } = usePageManager();
+  const timersRef = useRef<NodeJS.Timeout[]>([]);
+  const [showHint, setShowHint] = useState(false);
+
+  const clearTimers = useCallback(() => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+  }, []);
+
+  useEffect(() => () => clearTimers(), [clearTimers]);
+
+  function reveal(selector: string, delayMs: number, durationMs = 1400) {
+    document.querySelectorAll<HTMLElement>(selector).forEach((el) => {
+      el.classList.remove("reveal-line");
+      el.classList.add("hide");
+      void el.offsetWidth;
+    });
+
+    const t = setTimeout(() => {
+      document.querySelectorAll<HTMLElement>(selector).forEach((el) => {
+        el.classList.remove("hide");
+        el.classList.add("reveal-line");
+        el.style.setProperty("--reveal-duration", `${durationMs}ms`);
+      });
+    }, delayMs);
+
+    timersRef.current.push(t);
+  }
+
+  function onShow() {
+    clearTimers();
+    setShowHint(false);
+
+    let t = 120;
+    const step = 350;
+
+    reveal('.page21-reveal-1', t);
+    reveal('.page21-reveal-2', (t += step));
+    reveal('.page21-reveal-3', (t += step));
+    reveal('.page21-reveal-4', (t += step));
+
+    const hintTimer = setTimeout(() => setShowHint(true), (t += 900));
+    timersRef.current.push(hintTimer);
+  }
+
+  const goNext = () => appendNextPage && appendNextPage(PAGE_NUMBER, true);
+  const personality_label = '性格标签';
+  const keyword = '关键词';
+  return (
+    <PageWrapper pageNumber={PAGE_NUMBER} onShow={onShow}>
+      <div className={styles.container}>
+        <div className={styles.topText}>
+          <div className={`hide page21-reveal-1 ${styles.title}`}>基于你的行为与情绪</div>
+          <div className={`hide page21-reveal-2 ${styles.subtitle}`}>我们为你生成了一幅年度画像：</div>
+        </div>
+
+        <div className={styles.visualArea} onClick={goNext} data-next-ignore="true">
+          <div className={`${styles.frame} hide page21-reveal-3`}>
+            <Image src="/imgs/page21/frame.png" alt="中心图片" fill className={styles.objectContain} />
+          </div>
+
+          <div className={`${styles.leafLeft} hide page21-reveal-4`}>
+            <Image src="/imgs/page21/leaf_left.png" alt="leaf left" fill />
+          </div>
+          <div className={`${styles.leafRight} hide page21-reveal-4`}>
+            <Image src="/imgs/page21/leaf_right.png" alt="leaf right" fill />
+          </div>
+        </div>
+        
+        <div className={styles.textBlock}>
+          <div className={`${styles.tag} hide page21-reveal-2`}>你是一个「{<span className={styles.personalityLabel}>{personality_label}</span>}」</div>
+          <div className={`${styles.keywords} hide page21-reveal-3`}>你的年度关键词是 [{<span className={styles.keywordLabel}>{keyword}</span>}]</div>
+          <div className={`${styles.moment} hide page21-reveal-4`}>这一年，你最动人的一刻是：</div>
+        </div>
+
+        {showHint && (
+          <div className={styles.hintWrap}>
+            <ScrollUpHint />
+          </div>
+        )}
+      </div>
+    </PageWrapper>
+  );
+}
+/*"use client";
 import PageWrapper from "@/components/PageWrapper";
 import usePageManager from "@/hooks/usePageManager";
 
@@ -21,4 +115,4 @@ export default function Page21() {
       </div>
     </PageWrapper>
   );
-}
+}*/

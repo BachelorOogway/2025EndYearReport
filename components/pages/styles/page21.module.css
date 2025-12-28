@@ -1,0 +1,107 @@
+.container {
+  width: 100%;
+  height: var(--height);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url('/imgs/page21/background.png');
+  background-size: cover;
+  background-position: top center;
+  background-repeat: no-repeat;
+}
+
+.topText {
+  margin-top: 3.5rem;
+  width: 100%;
+  padding-left: 2.5rem;
+  z-index: 2;
+}
+
+.title {
+  font-family: var(--ff-primary);
+  font-weight: 300;
+  font-size: 1.25rem;
+  color: #000;
+}
+
+.subtitle {
+  margin-top: 0.6rem;
+  font-family: var(--ff-primary);
+  font-size: 1rem;
+  color: #000;
+}
+
+.visualArea {
+  margin-top: 1.5rem;
+  width: 100%;
+  height: 44%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.frame {
+  width: 56%;
+  aspect-ratio: 1/1;
+  position: relative;
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.objectContain {
+  object-fit: contain;
+}
+
+.leafLeft, .leafRight {
+  position: absolute;
+  width: 22%;
+  height: 50%;
+  z-index: 3;
+}
+
+.leafLeft { left: 6%; top: 8%; }
+.leafRight { right: 6%; bottom: 8%; }
+
+.textBlock {
+  margin-top: 1.2rem;
+  width: 100%;
+  padding-left: 2.5rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.tag, .keywords, .moment { font-weight: 300; font-size: 1rem; color:#000 }
+
+.hintWrap { position: absolute; bottom: 1.8rem; right: 1.5rem; z-index: 4; }
+
+.personalityLabel{
+    font-weight:800;
+    font-size: 1.5rem;
+    color: #000;
+}
+
+.keywordLabel{
+    font-weight:800;
+    font-size: 1.5rem;
+    color: #000;
+}
+/* small reveal helpers (reused patterns from other pages) */
+:global(.hide) { opacity: 0; }
+:global(.reveal-line) {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity var(--reveal-duration, 1400ms) ease-out, transform var(--reveal-duration, 1400ms) ease-out;
+}
+
+@media (max-width: 420px) {
+  .frame { width: 76%; }
+  .leafLeft, .leafRight { display: none; }
+}

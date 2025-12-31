@@ -36,6 +36,7 @@ export default function Page19() {
 
     timersRef.current.push(t);
   }
+  
 
   function onShow() {
     clearTimers();
